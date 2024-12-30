@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from google.cloud import translate_v3
 
@@ -7,7 +7,7 @@ DEFAULT_LANGUAGE = "tr"
 
 # Initialize Translation client
 def translate_text(
-        text: str = "YOUR_TEXT_TO_TRANSLATE",
+        contents: List[str] = ["Hello"],
         language_code: str = DEFAULT_LANGUAGE,
         source_language_code: Optional[str] = None,
 ) -> translate_v3.TranslationServiceClient:
@@ -16,11 +16,15 @@ def translate_text(
     # Translate text from English to chosen language
     # Supported mime types: # https://cloud.google.com/translate/docs/supported-formats
     response = client.translate_text(
-        contents=[text],
+        contents=contents,
         target_language_code=language_code,
         parent=parent,
         mime_type="text/plain",
         source_language_code=source_language_code,
     )
 
-    return response
+    translations = [translation.translated_text for translation in response.translations]
+    source_languages = [source_language_code]
+    if (source_language_code == None):
+        source_languages = set([translation.detected_language_code for translation in response.translations])
+    return {"translations": translations, "source_languages": source_languages }

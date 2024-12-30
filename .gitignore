@@ -1,2 +1,4 @@
 .idea
 .venv
+pk-*.json
+__pycache__

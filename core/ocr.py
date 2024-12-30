@@ -8,12 +8,14 @@ import torch
 class OCRTask(enum.Enum):
     FULL_TEXT = "<OCR>"
     WITH_REGIONS = "<OCR_WITH_REGION>"
+    def __str__(self):
+        return str(self.value)
 
 model_id = 'microsoft/Florence-2-large'
 model = AutoModelForCausalLM.from_pretrained(model_id, trust_remote_code=True, torch_dtype='auto').eval().cuda()
 processor = AutoProcessor.from_pretrained(model_id, trust_remote_code=True)
 
-def florence_infer(task_prompt, text_input: Optional[str] = None, image: Optional[Image] = None):
+def florence_infer(task_prompt, text_input: Optional[str] = None, image = None):
     if text_input is None:
         prompt = task_prompt
     else:
@@ -38,10 +40,4 @@ def florence_infer(task_prompt, text_input: Optional[str] = None, image: Optiona
 
 
 def text_from_image(task: OCRTask, image: Image):
-    match task:
-        case OCRTask.FULL_TEXT:
-            return florence_infer(task, None, image)
-        case OCRTask.WITH_REGIONS:
-            return florence_infer(task, None, image)
-        case _:
-            raise ValueError("Invalid OCR task")
+    return florence_infer(str(task), None, image)

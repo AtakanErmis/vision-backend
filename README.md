@@ -18,7 +18,11 @@ Back-end Layer for NKU Project I - Vision
 1. Clone the repository
 2. Initialize a virtual environment using `python -m venv venv`
 3. Run `pip install -r requirements.txt` to install the dependencies
-4. Run `python api/main.py` to start the server
+4. Run `fastapi dev api/main.py` to start the development server
 5. The server will be running on `http://localhost:8000`
 
+If you want to run for production deployment, use this command: `fastapi run api/main.py`
+
 ## API Documentation
+
+You can access Swagger API Documentation from `http://localhost:8000/docs`.
