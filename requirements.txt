@@ -119,7 +119,6 @@ pycparser==2.21
 pydantic==2.10.4
 pydantic_core==2.27.2
 Pygments==2.16.1
-PyGObject==3.42.1
 PyJWT==2.3.0
 pyparsing==2.4.7
 python-apt==2.4.0+ubuntu2
