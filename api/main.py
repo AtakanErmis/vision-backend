@@ -35,9 +35,10 @@ def translate_from_image(file: UploadFile, targetLanguage: str, sourceLanguage: 
     bboxes, labels = result['quad_boxes'], result['labels']
     result = []
     translate_result = translate_text(labels, targetLanguage, sourceLanguage)
-    for box, translated_label in zip(bboxes, translate_result["translations"]):
-        result.append((box, translated_label))
+    for box, translated_label, source_label in zip(bboxes, translate_result["translations"], labels):
+        result.append((box, translated_label, source_label))
     return {
         "translations": result,
-        "source_languages": translate_result["source_languages"]
+        "source_languages": translate_result["source_languages"],
+        "target_language": targetLanguage
     }
