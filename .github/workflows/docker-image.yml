@@ -25,7 +25,6 @@ jobs:
         env:
           RUNPOD_SECRET_nku_project_vision_pk: ${{secrets.google_pkfile}}
         with:
-          context: DockerFileFolder/
           push: true
           tags: atakanermis/project-i-nku-vision:latest
          
