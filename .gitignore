@@ -1,4 +1,4 @@
 .idea
 .venv
-pk-*.json
+*pk.json
 __pycache__
