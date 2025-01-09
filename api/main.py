@@ -31,8 +31,7 @@ def translate(data: TextTranslationRequestData):
 def translate_from_image(file: UploadFile, targetLanguage: str, sourceLanguage: str | None = None):
     image = Image.open(io.BytesIO(file.file.read()))
     prediction = text_from_image(OCRTask.WITH_REGIONS, image)
-    result = prediction[str(OCRTask.WITH_REGIONS)]
-    bboxes, labels = result['quad_boxes'], result['labels']
+    bboxes, labels = prediction['quad_boxes'], prediction['labels']
     result = []
     translate_result = translate_text(labels, targetLanguage, sourceLanguage)
     for box, translated_label, source_label in zip(bboxes, translate_result["translations"], labels):

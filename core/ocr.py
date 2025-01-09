@@ -60,7 +60,7 @@ def text_from_image(task: OCRTask, image: Image):
             prediction = florence_infer(str(task), None, image)
             result = prediction[str(OCRTask.FULL_TEXT)]
             return {
-                str(OCRTask.FULL_TEXT): sanitize_text(result)
+                sanitize_text(result)
             }
         case str(OCRTask.WITH_REGIONS):
             prediction = florence_infer(str(task), None, image)
@@ -72,8 +72,6 @@ def text_from_image(task: OCRTask, image: Image):
                     labels.remove(label)
                     bboxes.remove(bbox)
             return {
-                str(OCRTask.WITH_REGIONS): {
-                    "quad_boxes": bboxes,
-                    "labels": labels
-                }
+                "quad_boxes": bboxes,
+                "labels": labels
             }
