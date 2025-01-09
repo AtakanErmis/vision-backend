@@ -66,9 +66,9 @@ def text_from_image(task: OCRTask, image: Image):
             prediction = florence_infer(str(task), None, image)
             result = prediction[str(OCRTask.WITH_REGIONS)]
             bboxes, labels = result['quad_boxes'], result['labels']
-            labels = [sanitize_text(label) for label in labels]
             for bbox, label in zip(bboxes, labels):
-                if (len(label) == 0):
+                sanitized_label = sanitize_text(label)
+                if (len(sanitized_label) == 0):
                     labels.remove(label)
                     bboxes.remove(bbox)
             return {
