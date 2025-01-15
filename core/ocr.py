@@ -1,9 +1,9 @@
 import enum
-from typing import Optional, TypedDict
-
+from typing import Optional
 from transformers import AutoProcessor, AutoModelForCausalLM
 from PIL import Image
 import torch
+import re
 
 class OCRTask(enum.Enum):
     FULL_TEXT = "<OCR>"
@@ -39,5 +39,38 @@ def florence_infer(task_prompt, text_input: Optional[str] = None, image = None):
     return parsed_answer
 
 
+def sanitize_text(text: str):
+    pattern = r"<[^>]+>"
+    if not isinstance(text, str) or not isinstance(pattern, str):
+        print("Invalid input: Both text and pattern must be strings.")
+        return None
+
+    try:
+        compiled_pattern = re.compile(pattern)  # Compile for efficiency if used repeatedly
+        return compiled_pattern.sub("", text)  # Replace matches with empty string
+    except re.error as e:
+        print(f"Invalid regex pattern: {e}")
+        return text  # Return original string on regex error
+
+
 def text_from_image(task: OCRTask, image: Image):
-    return florence_infer(str(task), None, image)
+    match task:
+        case OCRTask.FULL_TEXT:
+            prediction = florence_infer(OCRTask.FULL_TEXT.value, None, image)
+            result = prediction[OCRTask.FULL_TEXT.value]
+            return {
+                sanitize_text(result)
+            }
+        case OCRTask.WITH_REGIONS:
+            prediction = florence_infer(OCRTask.WITH_REGIONS.value, None, image)
+            result = prediction[OCRTask.WITH_REGIONS.value]
+            bboxes, labels = result['quad_boxes'], result['labels']
+            labels = [sanitize_text(label) for label in labels]
+            for bbox, label in zip(bboxes, labels):
+                if (len(label) == 0):
+                    labels.remove(label)
+                    bboxes.remove(bbox)
+            return {
+                "quad_boxes": bboxes,
+                "labels": labels
+            }
