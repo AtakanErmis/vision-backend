@@ -55,16 +55,16 @@ def sanitize_text(text: str):
 
 
 def text_from_image(task: OCRTask, image: Image):
-    match str(task):
-        case str(OCRTask.FULL_TEXT):
-            prediction = florence_infer(str(task), None, image)
-            result = prediction[str(OCRTask.FULL_TEXT)]
+    match task:
+        case OCRTask.FULL_TEXT:
+            prediction = florence_infer(OCRTask.FULL_TEXT.value, None, image)
+            result = prediction[OCRTask.FULL_TEXT.value]
             return {
                 sanitize_text(result)
             }
-        case str(OCRTask.WITH_REGIONS):
-            prediction = florence_infer(str(task), None, image)
-            result = prediction[str(OCRTask.WITH_REGIONS)]
+        case OCRTask.WITH_REGIONS:
+            prediction = florence_infer(OCRTask.WITH_REGIONS.value, None, image)
+            result = prediction[OCRTask.WITH_REGIONS.value]
             bboxes, labels = result['quad_boxes'], result['labels']
             labels = [sanitize_text(label) for label in labels]
             for bbox, label in zip(bboxes, labels):
