@@ -5,7 +5,6 @@ from PIL import Image
 import torch
 import re
 
-
 class OCRTask(enum.Enum):
     FULL_TEXT = "<OCR>"
     WITH_REGIONS = "<OCR_WITH_REGION>"
